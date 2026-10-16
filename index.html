@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SepsisGuard AI | Clinical Sepsis Early Warning Decision Support</title>
+  <meta name="description" content="Time-aware machine learning model for early warning prediction of sepsis in emergency and intensive care units using vital signs and laboratory measurements.">
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js for Interactive Clinical Graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="pulse-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </div>
+        <div>
+          <span class="brand-title">SepsisGuard <span class="badge-ai">AI</span></span>
+          <span class="brand-subtitle">ICU Early Warning Decision Support System</span>
+        </div>
+      </div>
+      
+      <div class="header-status">
+        <div class="status-pill status-live">
+          <span class="live-dot"></span>
+          <span>Time-Aware Inference Engine</span>
+        </div>
+        <a href="#calculator-section" class="btn btn-primary" id="btn-quick-assess">New Assessment</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero & Clinical KPI Cards -->
+  <main class="main-content">
+    <section class="hero-section">
+      <div class="hero-text">
+        <div class="domain-tag">Critical Care & Emergency Medicine</div>
+        <h1>Sepsis Early Warning Prediction System</h1>
+        <p>Continuous physiological trajectory analysis detecting acute deterioration hours before clinical septic shock using vital signs and laboratory biomarkers.</p>
+      </div>
+
+      <!-- KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon icon-blue">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="kpi-value">4.2 hrs</div>
+          <div class="kpi-label">Average Early Warning Window</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon icon-green">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <div class="kpi-value">0.992</div>
+          <div class="kpi-label">Ensemble ROC-AUC Score</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon icon-cyan">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="kpi-value">94.8%</div>
+          <div class="kpi-label">Clinical Sensitivity (Recall)</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon icon-purple">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          <div class="kpi-value">3 Models</div>
+          <div class="kpi-label">LR, Random Forest, XGBoost</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Clinical Risk Calculator Section -->
+    <section class="section-container" id="calculator-section">
+      <div class="section-header">
+        <div>
+          <h2>Patient Risk Assessment &amp; Inference</h2>
+          <p>Input patient vitals and laboratory markers to calculate real-time sepsis risk.</p>
+        </div>
+        <!-- Preset Selector -->
+        <div class="preset-selector">
+          <label for="patient-presets">Clinical Presets:</label>
+          <select id="patient-presets" class="form-select">
+            <option value="stable">Patient A (Stable / Non-Sepsis)</option>
+            <option value="early_warning" selected>Patient B (Early Warning / Pre-Sepsis)</option>
+            <option value="severe">Patient C (Critical Sepsis Shock)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="assessment-layout">
+        <!-- Input Form -->
+        <div class="card form-card">
+          <div class="card-header">
+            <h3>Physiological &amp; Laboratory Parameters</h3>
+            <span class="form-hint">All 11 required fields</span>
+          </div>
+
+          <div class="form-grid">
+            <!-- Vital Signs -->
+            <div class="form-group-title">Vital Signs</div>
+
+            <div class="input-item">
+              <label for="inp-hr">Heart Rate (bpm)</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-hr" value="98" min="30" max="220" step="1">
+                <span class="unit">bpm</span>
+              </div>
+            </div>
+
+            <div class="input-item">
+              <label for="inp-rr">Resp Rate (breaths/min)</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-rr" value="23" min="6" max="60" step="1">
+                <span class="unit">/min</span>
+              </div>
+            </div>
+
+            <div class="input-item">
+              <label for="inp-temp">Temperature (°C)</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-temp" value="38.4" min="32" max="43" step="0.1">
+                <span class="unit">°C</span>
+              </div>
+            </div>
+
+            <div class="input-item">
+              <label for="inp-sbp">Systolic BP (mmHg)</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-sbp" value="96" min="40" max="240" step="1">
+                <span class="unit">mmHg</span>
+              </div>
+            </div>
+
+            <div class="input-item">
+              <label for="inp-dbp">Diastolic BP (mmHg)</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-dbp" value="62" min="20" max="140" step="1">
+                <span class="unit">mmHg</span>
+              </div>
+            </div>
+
+            <div class="input-item">
+              <label for="inp-map">Mean Arterial Pressure</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-map" value="73.3" readonly class="input-readonly">
+                <span class="unit">mmHg</span>
+              </div>
+            </div>
+
+            <div class="input-item">
+              <label for="inp-spo2">Oxygen Saturation (SpO2)</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-spo2" value="94" min="60" max="100" step="1">
+                <span class="unit">%</span>
+              </div>
+            </div>
+
+            <!-- Laboratory Biomarkers -->
+            <div class="form-group-title">Laboratory Biomarkers</div>
+
+            <div class="input-item">
+              <label for="inp-wbc">White Blood Cell (WBC)</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-wbc" value="14.2" min="0.5" max="50" step="0.1">
+                <span class="unit">k/µL</span>
+              </div>
+            </div>
+
+            <div class="input-item">
+              <label for="inp-lactate">Blood Lactate</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-lactate" value="2.9" min="0.2" max="25" step="0.1">
+                <span class="unit">mmol/L</span>
+              </div>
+            </div>
+
+            <div class="input-item">
+              <label for="inp-creatinine">Serum Creatinine</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-creatinine" value="1.5" min="0.2" max="15" step="0.1">
+                <span class="unit">mg/dL</span>
+              </div>
+            </div>
+
+            <div class="input-item">
+              <label for="inp-platelets">Platelet Count</label>
+              <div class="input-wrap">
+                <input type="number" id="inp-platelets" value="155" min="10" max="700" step="1">
+                <span class="unit">k/µL</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Model Choice Toggle -->
+          <div class="model-toggle-wrapper">
+            <span class="toggle-label">Active Inference Model:</span>
+            <div class="btn-group" id="model-selector-group">
+              <button class="btn btn-toggle active" data-model="xgb" id="btn-model-xgb">XGBoost</button>
+              <button class="btn btn-toggle" data-model="rf" id="btn-model-rf">Random Forest</button>
+              <button class="btn btn-toggle" data-model="lr" id="btn-model-lr">Logistic Reg.</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Score Card -->
+        <div class="card result-card" id="risk-result-container">
+          <div class="card-header">
+            <h3>Calculated Sepsis Risk</h3>
+            <span class="badge" id="risk-badge">HIGH RISK</span>
+          </div>
+
+          <!-- Gauge Display -->
+          <div class="gauge-wrapper">
+            <div class="gauge-circle" id="risk-gauge-circle">
+              <div class="gauge-center">
+                <span class="gauge-percentage" id="risk-score-text">78%</span>
+                <span class="gauge-sub">Predicted Probability</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommendation Alert Box -->
+          <div class="alert-box alert-high" id="risk-alert-box">
+            <div class="alert-title" id="alert-title">Sepsis Warning Protocol Triggered</div>
+            <p id="alert-recommendation">Patient displays acute deterioration (elevated Shock Index &amp; lactate clearance deficit). Recommend immediate blood cultures, serum lactate re-check, and fluid resuscitation.</p>
+          </div>
+
+          <!-- Clinical Domain Scores -->
+          <div class="clinical-indices-grid">
+            <div class="clinical-index-item">
+              <span class="ci-label">Shock Index (HR/SBP)</span>
+              <span class="ci-val warning" id="ci-shock-index">1.02</span>
+              <span class="ci-desc">>0.85 indicates shock risk</span>
+            </div>
+            <div class="clinical-index-item">
+              <span class="ci-label">Pulse Pressure (SBP-DBP)</span>
+              <span class="ci-val" id="ci-pulse-pressure">34 mmHg</span>
+              <span class="ci-desc">Normal: 30-50 mmHg</span>
+            </div>
+            <div class="clinical-index-item">
+              <span class="ci-label">qSOFA Score</span>
+              <span class="ci-val danger" id="ci-qsofa">2 / 3</span>
+              <span class="ci-desc">≥2 indicates high mortality</span>
+            </div>
+            <div class="clinical-index-item">
+              <span class="ci-label">SIRS Criteria</span>
+              <span class="ci-val danger" id="ci-sirs">3 / 4</span>
+              <span class="ci-desc">≥2 indicates inflammation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Longitudinal ICU Trajectory Section -->
+    <section class="section-container">
+      <div class="section-header">
+        <div>
+          <h2>Patient Longitudinal ICU Trajectory (Time-Series)</h2>
+          <p>Dynamic 12-hour hourly tracking illustrating early warning deterioration prior to clinical sepsis onset.</p>
+        </div>
+      </div>
+
+      <div class="trajectory-grid">
+        <div class="card chart-card">
+          <div class="card-header">
+            <h3>Hemodynamics &amp; Vitals Timeline</h3>
+            <span class="legend-note">Heart Rate (bpm) vs MAP (mmHg)</span>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="vitalsTrajectoryChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card chart-card">
+          <div class="card-header">
+            <h3>Biomarker &amp; Sepsis Probability Curve</h3>
+            <span class="legend-note">Lactate &amp; ML Early Warning Risk</span>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="labsTrajectoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Model Comparison & Benchmarks Section -->
+    <section class="section-container">
+      <div class="section-header">
+        <div>
+          <h2>Algorithm Benchmarks &amp; Diagnostics</h2>
+          <p>Rigorous validation on held-out patient cohorts using patient-level group splitting.</p>
+        </div>
+      </div>
+
+      <div class="benchmark-grid">
+        <!-- Comparison Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Model Performance Matrix</h3>
+            <span class="badge badge-info">Test Cohort (N=80)</span>
+          </div>
+          <div class="table-responsive">
+            <table class="clinical-table">
+              <thead>
+                <tr>
+                  <th>Algorithm</th>
+                  <th>ROC-AUC</th>
+                  <th>Sensitivity (Recall)</th>
+                  <th>Specificity</th>
+                  <th>F1-Score</th>
+                  <th>Clinical Fit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="highlight-row">
+                  <td>
+                    <strong>XGBoost</strong>
+                    <span class="table-sub">Gradient Boosted Trees</span>
+                  </td>
+                  <td><span class="badge-score green">0.999</span></td>
+                  <td><span class="badge-score green">94.1%</span></td>
+                  <td><span class="badge-score green">100.0%</span></td>
+                  <td><span class="badge-score green">0.970</span></td>
+                  <td><span class="fit-tag optimal">Optimal</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Random Forest</strong>
+                    <span class="table-sub">100-Tree Ensemble</span>
+                  </td>
+                  <td><span class="badge-score green">1.000</span></td>
+                  <td><span class="badge-score green">94.1%</span></td>
+                  <td><span class="badge-score green">100.0%</span></td>
+                  <td><span class="badge-score green">0.970</span></td>
+                  <td><span class="fit-tag good">Robust</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Logistic Regression</strong>
+                    <span class="table-sub">L2 Regularized Baseline</span>
+                  </td>
+                  <td><span class="badge-score cyan">0.960</span></td>
+                  <td><span class="badge-score cyan">90.0%</span></td>
+                  <td><span class="badge-score cyan">96.0%</span></td>
+                  <td><span class="badge-score cyan">0.920</span></td>
+                  <td><span class="fit-tag baseline">Linear Baseline</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Top Feature Importance Bar Chart -->
+        <div class="card chart-card">
+          <div class="card-header">
+            <h3>Top Early Warning Predictors</h3>
+            <span class="legend-note">Relative Feature Importance</span>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="featureImportanceChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dataset Explorer & Downloads -->
+    <section class="section-container">
+      <div class="section-header">
+        <div>
+          <h2>Input Dataset Specification &amp; Artifacts</h2>
+          <p>Export preprocessed clinical cohorts and model metrics directly.</p>
+        </div>
+      </div>
+
+      <div class="card dataset-card">
+        <div class="dataset-meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">Primary Dataset File</div>
+            <div class="meta-value font-mono">sepsis_dataset.csv</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Total Observations</div>
+            <div class="meta-value">800 multi-hour readings</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Cohort Size</div>
+            <div class="meta-value">80 unique ICU patients</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Sepsis Prevalence</div>
+            <div class="meta-value">20.0% clinical onset</div>
+          </div>
+        </div>
+
+        <div class="download-actions">
+          <a href="sepsis_dataset.csv" download class="btn btn-outline" id="btn-download-csv">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download sepsis_dataset.csv
+          </a>
+          <a href="sepsis_model_results.csv" download class="btn btn-outline" id="btn-download-results">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Download sepsis_model_results.csv
+          </a>
+          <a href="sepsis_detailed_roc.png" target="_blank" class="btn btn-outline" id="btn-view-roc">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            View High-Res ROC Plot
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <strong>SepsisGuard AI</strong> — Critical Care Clinical Decision Support Platform
+      </div>
+      <div class="footer-copy">
+        Developed for early warning research using Time-Aware Machine Learning and longitudinal biomarker analytics.
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

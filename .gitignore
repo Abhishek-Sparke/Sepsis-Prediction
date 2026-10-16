@@ -1,0 +1,31 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Vercel Cache
+.vercel/
+
+# Unrelated scratch files
+1.py
+day3.py
+desion.py
+expense.py
+ml.py
+num.py
+cleaned_student_data.csv
+student_marks.csv
+weather_data.csv
+weather_detector.py
